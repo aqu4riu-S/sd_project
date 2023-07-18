@@ -1,0 +1,60 @@
+syntax = "proto3";
+package pt.ulisboa.tecnico.distledger.contract.distledgerserver;
+
+import "DistLedgerCommonDefinitions.proto";
+
+// Cross-server interface of the DistLedger Service (only for phases 2 & 3 of the project)
+message VectorClock {
+  repeated int32 ts = 1;
+}
+
+message PropagateStateRequest {
+  LedgerState state = 1;
+  VectorClock replicaTS = 2;
+}
+
+message PropagateStateResponse {}
+
+message RegisterRequest {
+  string serviceName = 1;
+  string serverQualifier = 2;
+  string serverAddress = 3;
+}
+
+message RegisterResponse {
+  //repeated int32 replicaTS = 1;
+}
+
+message LookupRequest {
+  string serviceName = 1;
+  string qualifier = 2;
+}
+
+message NamingServerEntry {
+  string ServerQualifier = 1;
+  string ServerAddress = 2;
+}
+
+message Server {
+  string address = 1;
+  string qualifier = 2;
+}
+
+message LookupResponse {
+  repeated NamingServerEntry serverEntries = 1;
+}
+
+message IsAvailableRequest {
+}
+
+message IsAvailableResponse {
+  bool isAvailable = 1;
+}
+
+
+service DistLedgerCrossServerService {
+  rpc propagateState(PropagateStateRequest) returns (PropagateStateResponse);
+  rpc register(RegisterRequest) returns (RegisterResponse);
+  rpc lookup(LookupRequest) returns (LookupResponse);
+  rpc isAvailable(IsAvailableRequest) returns (IsAvailableResponse);
+}
